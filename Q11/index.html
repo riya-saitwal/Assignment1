@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Cricket Score</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 50px;
+    }
+    #score {
+      font-size: 24px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Live Cricket Score</h1>
+  <div id="score">Fetching score...</div>
+
+  <script>
+    async function fetchLiveScore() {
+      try {
+        const response = await fetch('/live-score');
+        const data = await response.json();
+        
+        // Update the score on the page
+        document.getElementById('score').innerText = `Score: ${data.score}`;
+      } catch (error) {
+        document.getElementById('score').innerText = 'Error fetching live score';
+      }
+    }
+
+    // Fetch the live score every 30 seconds
+    fetchLiveScore();
+    setInterval(fetchLiveScore, 30000);
+  </script>
+</body>
+</html>

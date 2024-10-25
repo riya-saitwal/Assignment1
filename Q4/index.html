@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #chat {
+            border: 1px solid #ccc;
+            height: 300px;
+            overflow-y: scroll;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        #input {
+            width: 80%;
+        }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Chatbot</h1>
+    <div id="chat"></div>
+    <input type="text" id="input" placeholder="Type your message here..."/>
+    <button id="sendBtn">Send</button>
+
+    <script>
+        const chat = document.getElementById('chat');
+        const input = document.getElementById('input');
+        const sendBtn = document.getElementById('sendBtn');
+
+        // Connect to the WebSocket server
+        const socket = new WebSocket('ws://localhost:8080');
+
+        // Listen for messages from the server
+        socket.addEventListener('message', (event) => {
+            const message = document.createElement('div');
+            message.textContent = 'Bot: ' + event.data;
+            chat.appendChild(message);
+            chat.scrollTop = chat.scrollHeight; // Scroll to the bottom
+        });
+
+        // Send a message to the server when the button is clicked
+        sendBtn.addEventListener('click', () => {
+            const userMessage = input.value;
+            if (userMessage) {
+                const message = document.createElement('div');
+                message.textContent = 'You: ' + userMessage;
+                chat.appendChild(message);
+                socket.send(userMessage);
+                input.value = ''; // Clear the input field
+            }
+        });
+
+        // Optional: Send a message when the user presses Enter
+        input.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                sendBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>
